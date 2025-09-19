@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open me up, please? </title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#fff1fb;
+      --card:#ffffff;
+      --accent:#ff6b9a;
+      --accent-2:#ffd1e6;
+      --muted:#7a6f82;
+      --glass: rgba(255,255,255,0.6);
+    }
+    * { box-sizing: border-box }
+    html,body { height:100%; margin:0; padding:0; }
+    body {
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(circle at 10% 10%, #fff8fc 0%, var(--bg) 30%, #ffeef7 100%);
+      display:flex; align-items:center; justify-content:center; padding:12px;
+    }
+
+    .hearts {position:fixed; inset:0; pointer-events:none; overflow:hidden;}
+    .hearts i {
+      position:absolute; display:block; width:14px; height:14px;
+      transform:rotate(-45deg);
+      background:linear-gradient(180deg,var(--accent) 0%, var(--accent-2) 100%);
+      border-radius:4px 4px 0 0;
+      animation:floatUp linear infinite; opacity:0.9;
+    }
+    .hearts i:before, .hearts i:after {
+      content:''; position:absolute; width:14px; height:14px;
+      background:inherit; border-radius:50%;
+    }
+    .hearts i:before{top:-7px; left:0}
+    .hearts i:after{left:7px; top:0}
+    @keyframes floatUp {
+      0%{transform:translateY(0) rotate(-45deg) scale(.9); opacity:0}
+      10%{opacity:1}
+      100%{transform:translateY(-120vh) rotate(-45deg) scale(1.2); opacity:0}
+    }
+
+    .card {
+      width:100%; max-width:420px;
+      padding:20px; border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      box-shadow:0 8px 24px rgba(102,51,85,0.12);
+      backdrop-filter: blur(6px);
+      position:relative; display:flex; flex-direction:column; align-items:center; text-align:center;
+    }
+
+    h1 {font-family:'Baloo 2', cursive; margin:0; font-size:26px; color:#3d1b2a}
+    p.lead {margin:8px 0 14px; color:var(--muted); font-size:14px}
+
+    .askBox {
+      background:linear-gradient(180deg, #fff, var(--card));
+      padding:14px; border-radius:12px;
+      border:1px solid rgba(255,107,154,0.08);
+      box-shadow:0 4px 12px rgba(102,51,85,0.06);
+      width:100%;
+    }
+    .q-text {font-weight:700; font-size:18px}
+    .shy {font-size:12px; color:var(--muted); margin-top:6px}
+
+    .buttons {
+      display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap;
+    }
+    .btn {
+      flex:1; min-width:120px;
+      padding:10px; border-radius:12px; border:0; cursor:pointer; font-weight:600;
+      box-shadow:0 4px 10px rgba(0,0,0,0.06);
+      transition:transform .14s ease;
+    }
+    .btn:active {transform:translateY(2px)}
+    .btn-yes {background:linear-gradient(90deg,var(--accent),#ff8fb2); color:white}
+    .btn-no {background:transparent; border:1px solid #ffe1ee; color:#a56a7f}
+
+    .heartCard {
+      margin-top:16px; width:180px; height:180px;
+      border-radius:20px; background:linear-gradient(180deg,#fff0f5,#fff7fb);
+      display:flex; align-items:center; justify-content:center; flex-direction:column;
+    }
+    .bigHeart {
+      width:90px; height:90px;
+      transform:rotate(-45deg); position:relative;
+    }
+    .bigHeart:before,.bigHeart:after {
+      content:''; position:absolute; width:90px; height:90px;
+      background:linear-gradient(180deg,var(--accent),#ff95b8); border-radius:50%;
+    }
+    .bigHeart:before {top:-45px}
+    .bigHeart:after {left:45px}
+    .bigHeartInner {
+      position:absolute; width:65px; height:65px; background:white;
+      border-radius:16px; transform:rotate(45deg); top:12px; left:12px;
+      box-shadow:inset 0 4px 10px rgba(255,255,255,0.35);
+    }
+
+    .response {
+      margin-top:10px; font-weight:700; font-size:16px; color:#4a2032;
+      opacity:0; transform:translateY(6px); transition:all .3s;
+    }
+    .response.show {opacity:1; transform:translateY(0)}
+
+    .meta {font-size:11px; color:var(--muted); margin-top:8px}
+
+    .confetti {position:absolute; inset:0; pointer-events:none}
+    .confetti span {position:absolute; width:6px; height:10px; opacity:0;}
+    .confetti.show span {animation:pop .9s ease forwards}
+    @keyframes pop {
+      0%{opacity:0; transform:translateY(0) rotate(0)}
+      20%{opacity:1}
+      100%{transform:translateY(-180px) rotate(480deg); opacity:0}
+    }
+
+    /* Responsif khusus iPhone X (≤400px) */
+    @media (max-width:400px){
+      h1 {font-size:22px;}
+      .q-text {font-size:16px;}
+      .btn {min-width:100px; padding:8px; font-size:14px;}
+      .heartCard {width:150px; height:150px;}
+      .bigHeart {width:75px; height:75px;}
+      .bigHeart:before,.bigHeart:after {width:75px; height:75px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" aria-hidden="true"></div>
+  <main class="card">
+    <h1>There's something i wanna talk about...</h1>
+
+    <div class="askBox">
+      <div class="q-text">Do you miss me?</div>
+      <div class="shy">Ayo, choose one of the buttons below💓</div>
+      <div class="buttons">
+        <button class="btn btn-yes" id="yesBtn">Yes 💖</button>
+        <button class="btn btn-no" id="noBtn">No... 😢</button>
+      </div>
+      <div class="response" id="responseText">Thanks for answering!</div>
+    </div>
+
+    <div class="heartCard">
+      <div class="bigHeart" id="bigHeart"><div class="bigHeartInner"></div></div>
+      <div style="margin-top:10px;font-weight:700;color:#6d2a40">with love, d.💕</div>
+    </div>
+
+    <div class="confetti" id="confettiArea" aria-hidden="true"></div>
+  </main>
+
+  <script>
+    (function makeHearts(){
+      const container = document.querySelector('.hearts');
+      for(let i=0;i<14;i++){
+        const el = document.createElement('i');
+        const size = 10 + Math.random()*20;
+        el.style.width = size+'px';
+        el.style.height = size+'px';
+        el.style.left = Math.random()*100+'vw';
+        el.style.bottom = (-20 - Math.random()*60)+'px';
+        el.style.animationDuration = (6+Math.random()*9)+'s';
+        container.appendChild(el);
+      }
+    })();
+
+    function makeConfetti(x,y,count=20){
+      const area=document.getElementById('confettiArea');
+      area.innerHTML='';
+      const colors=['#ff6b9a','#ffd1e6','#ffb3d2','#ffd98f','#9be7ff'];
+      for(let i=0;i<count;i++){
+        const s=document.createElement('span');
+        s.style.left=(x+(Math.random()*80-40))+'px';
+        s.style.top=(y+(Math.random()*30-15))+'px';
+        s.style.background=colors[Math.floor(Math.random()*colors.length)];
+        s.style.animationDelay=(Math.random()*0.2)+'s';
+        area.appendChild(s);
+      }
+      requestAnimationFrame(()=>area.classList.add('show'));
+      setTimeout(()=>area.classList.remove('show'),900);
+    }
+
+    const yesBtn=document.getElementById('yesBtn');
+    const noBtn=document.getElementById('noBtn');
+    const resp=document.getElementById('responseText');
+    const heart=document.getElementById('bigHeart');
+
+    yesBtn.addEventListener('click',(e)=>{
+      heart.animate([
+        {transform:'scale(1) rotate(-45deg)'},
+        {transform:'scale(1.15) rotate(-45deg)'},
+        {transform:'scale(1) rotate(-45deg)'}
+      ],{duration:400,easing:'cubic-bezier(.2,.9,.2,1)'});
+      resp.textContent='AAAA, I missed you too! 💕';
+      resp.classList.add('show');
+      const rect=e.target.getBoundingClientRect();
+      makeConfetti(rect.left+rect.width/2, rect.top+rect.height/2, 20);
+    });
+
+    noBtn.addEventListener('mouseenter',()=>{
+      const r=Math.random()*100-50;
+      const t=Math.random()*12-6;
+      noBtn.style.transform=`translate(${r}px, ${t}px)`;
+    });
+    noBtn.addEventListener('click',(e)=>{
+      resp.textContent='Ouch 💔 but thanks for being honest';
+      resp.classList.add('show');
+      const rect=e.target.getBoundingClientRect();
+      makeConfetti(rect.left+rect.width/2, rect.top+rect.height/2, 12);
+    });
+
+    document.addEventListener('click',(ev)=>{
+      if(!ev.target.closest('.askBox')){
+        resp.classList.remove('show');
+      }
+    });
+    setInterval(()=>{ noBtn.style.transform='translate(0,0)'; },4000);
+  </script>
+</body>
+</html>
